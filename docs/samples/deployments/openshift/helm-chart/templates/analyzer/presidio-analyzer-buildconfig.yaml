@@ -1,0 +1,23 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: presidio-analyzer
+  labels:
+    app: presidio-analyzer
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/microsoft/presidio.git
+    contextDir: presidio-analyzer
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: presidio-analyzer:latest
+  triggers:
+    - type: ImageChange
+    - type: ConfigChange

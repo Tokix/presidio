@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presidio-anonymizer
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: presidio-anonymizer
+  template:
+    metadata:
+      labels:
+        app: presidio-anonymizer
+    spec:
+      containers:
+        - name: presidio-anonymizer
+          image: {{ .Values.imageRegistry }}/{{ .Values.namespace }}/{{ .Values.anonymizer.image.name }}:{{ .Values.anonymizer.image.tag }}
+          imagePullPolicy: {{ .Values.anonymizer.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "{{ .Values.anonymizer.service.targetPort }}"
+          ports:
+            - containerPort: {{ .Values.anonymizer.service.targetPort }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}

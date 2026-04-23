@@ -1,0 +1,23 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: presidio-anonymizer
+  labels:
+    app: presidio-anonymizer
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/microsoft/presidio.git
+    contextDir: presidio-anonymizer
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: presidio-anonymizer:latest
+  triggers:
+    - type: ImageChange
+    - type: ConfigChange

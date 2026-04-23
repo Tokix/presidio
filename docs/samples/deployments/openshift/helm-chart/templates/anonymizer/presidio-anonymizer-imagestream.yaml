@@ -1,0 +1,16 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: presidio-anonymizer
+  name: presidio-anonymizer
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - from:
+        kind: DockerImage
+        name: presidio-anonymizer:latest
+      name: latest
+      referencePolicy:
+        type: ""

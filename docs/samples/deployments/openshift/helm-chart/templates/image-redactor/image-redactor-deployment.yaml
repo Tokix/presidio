@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presidio-image-redactor
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: presidio-image-redactor
+  template:
+    metadata:
+      labels:
+        app: presidio-image-redactor
+    spec:
+      containers:
+        - name: presidio-image-redactor
+          image: {{ .Values.imageRegistry }}/{{ .Values.namespace }}/{{ .Values.imageRedactor.image.name }}:{{ .Values.imageRedactor.image.tag }}
+          imagePullPolicy: {{ .Values.imageRedactor.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "{{ .Values.imageRedactor.service.targetPort }}"
+          ports:
+            - containerPort: {{ .Values.imageRedactor.service.targetPort }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}

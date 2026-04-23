@@ -1,0 +1,12 @@
+apiVersion: v2
+name: presidio
+version: 0.1.0
+description: A Helm chart for deploying Presidio to OpenShift 4.21
+keywords:
+  - presidio
+  - privacy
+  - anonymization
+  - openshift
+maintainers:
+  - name: Toke Lichtenberg
+    email: toke.lichtenberg@gmail.com

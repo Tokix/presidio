@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presidio-analyzer
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: presidio-analyzer
+  template:
+    metadata:
+      labels:
+        app: presidio-analyzer
+    spec:
+      containers:
+        - name: presidio-analyzer
+          image: {{ .Values.imageRegistry }}/{{ .Values.namespace }}/{{ .Values.analyzer.image.name }}:{{ .Values.analyzer.image.tag }}
+          imagePullPolicy: {{ .Values.analyzer.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "{{ .Values.analyzer.service.targetPort }}"
+            - name: OLLAMA_HOST
+              value: {{ .Values.analyzer.ollamaHost | quote }}
+          ports:
+            - containerPort: {{ .Values.analyzer.service.targetPort }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
