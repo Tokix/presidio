@@ -25,11 +25,11 @@ langextract:
   examples_file: "langextract_prompts/default_pii_phi_examples.yaml"
 
   model:
-    model_id: "qwen2.5:1.5b"
+    model_id: "{{ MODEL_ID | default('qwen2.5:1.5b') }}"
     provider:
       name: "ollama"
       kwargs:
-        model_url: "http://localhost:11434"
+        model_url: "{{ OLLAMA_BASE_URL | default(OLLAMA_HOST | default('http://localhost:11434')) }}"
       extract_params:
         temperature: null
         use_schema_constraints: false

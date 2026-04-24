@@ -54,3 +54,14 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+  
+# E2E Tests configuration
+e2eTests:
+  image:
+    repository: image-registry.openshift-image-registry.svc:5000/presidio/presidio-e2e-tests
+    tag: latest
+    pullPolicy: IfNotPresent
+  endpoints:
+    analyzer: "http://presidio-analyzer.presidio.svc.cluster.local:5002"
+    anonymizer: "http://presidio-anonymizer.presidio.svc.cluster.local:5001"
+    imageRedactor: "http://presidio-image-redactor.presidio.svc.cluster.local:5003"

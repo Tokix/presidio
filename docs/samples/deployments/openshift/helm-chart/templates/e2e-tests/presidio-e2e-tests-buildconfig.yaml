@@ -1,0 +1,26 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: presidio-e2e-tests
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/microsoft/presidio.git
+    dockerfile: |
+        FROM python:3.10-slim
+        WORKDIR /repo
+        COPY . ./
+        WORKDIR /repo/e2e-tests
+        RUN pip install --upgrade pip --root-user-action=ignore
+        RUN pip install --no-cache-dir -r requirements.txt --root-user-action=ignore \
+          && pip install --no-cache-dir -e ../presidio-analyzer[langextract] -e ../presidio-anonymizer --root-user-action=ignore \
+          && python -m spacy download en_core_web_lg \
+          && python -m spacy validate
+        CMD ["pytest"]
+  strategy:
+    type: Docker
+  output:
+    to:
+      kind: ImageStreamTag
+      name: presidio-e2e-tests:latest

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presidio-e2e-tests
+  labels:
+    app: presidio-e2e-tests
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: presidio-e2e-tests
+  template:
+    metadata:
+      labels:
+        app: presidio-e2e-tests
+    spec:
+      containers:
+        - name: presidio-e2e-tests
+          image: "{{ .Values.e2eTests.image.repository }}:{{ .Values.e2eTests.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - "pytest -v --maxfail=1 --disable-warnings"
+          env:
+            - name: ANALYZER_BASE_URL
+              value: "{{ .Values.e2eTests.endpoints.analyzer }}"
+            - name: ANONYMIZER_BASE_URL
+              value: "{{ .Values.e2eTests.endpoints.anonymizer }}"
+            - name: IMAGE_REDACTOR_BASE_URL
+              value: "{{ .Values.e2eTests.endpoints.imageRedactor }}"
+          # No volumeMounts needed; use image's internal /e2e-tests
