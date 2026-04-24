@@ -66,7 +66,13 @@ def test_given_text_with_pii_using_package_then_analyze_and_anonymize_successful
 
 @pytest.mark.package
 def test_given_text_with_pii_using_ollama_recognizer_then_detects_entities(tmp_path):
-    """Test Ollama LangExtract recognizer detects entities when explicitly added to analyzer."""
+    """
+    Test Ollama LangExtract recognizer detects entities when explicitly added to analyzer.
+
+    The config YAML (ollama_test_config.yaml) uses Jinja2 templates to resolve model_id and model_url
+    from environment variables (MODEL_ID, OLLAMA_BASE_URL, OLLAMA_HOST). This ensures no hardcoded
+    Ollama endpoints or model IDs are present in the test configuration.
+    """
     assert LANGEXTRACT_RECOGNIZER_AVAILABLE, "LangExtract must be installed for e2e tests"
 
     text_to_test = "Patient John Smith, SSN 123-45-6789, email john@example.com, phone 555-123-4567, lives at 123 Main St, works at Acme Corp"

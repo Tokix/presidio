@@ -200,6 +200,11 @@ recognizers:
     type: predefined
     enabled: false
 
+  #
+  # NOTE: The e2eollama recognizer uses a config file (ollama_test_config.yaml) with Jinja2 templates for model_id and model_url.
+  #   - model_id: {{ MODEL_ID | default('qwen2.5:1.5b') }}
+  #   - model_url: {{ OLLAMA_BASE_URL | default(OLLAMA_HOST | default('http://localhost:11434')) }}
+  # This ensures no hardcoded Ollama endpoints or model IDs are present in the test configuration.
   - name: e2eollama
     supported_languages:
       - en

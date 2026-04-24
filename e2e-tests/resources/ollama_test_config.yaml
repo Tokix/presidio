@@ -1,4 +1,9 @@
 # LMRecognizer base configuration
+#
+# NOTE: model_id and model_url are resolved from environment variables using Jinja2 templates.
+#   - model_id: uses {{ MODEL_ID | default('qwen2.5:1.5b') }}
+#   - model_url: uses {{ OLLAMA_BASE_URL | default(OLLAMA_HOST | default('http://localhost:11434')) }}
+# This ensures no hardcoded Ollama endpoints or model IDs are present in the test configuration.
 lm_recognizer:
   supported_entities:
     - PERSON

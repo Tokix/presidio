@@ -1,3 +1,6 @@
+## Ollama E2E Test Configuration
+
+For details on configuring Ollama endpoints and model IDs for end-to-end tests, see [e2e-tests/README.md](../../e2e-tests/README.md). All test configs use environment variables and Jinja2 templates—no hardcoded URLs or model IDs.
 # **Presidio**: Data Protection and De-identification SDK
 
 Presidio _(Origin from Latin praesidium ‘protection, garrison’)_

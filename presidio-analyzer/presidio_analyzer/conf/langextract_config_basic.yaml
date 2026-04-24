@@ -3,6 +3,11 @@
 #
 # Required parameters: model_id, provider.name
 # Optional parameters use defaults if not specified
+#
+# NOTE: model_id and model_url are resolved from environment variables using Jinja2 templates.
+#   - model_id: uses {{ MODEL_ID | default('qwen2.5:1.5b') }}
+#   - model_url: uses {{ OLLAMA_BASE_URL | default(OLLAMA_HOST | default('http://localhost:11434')) }}
+# This ensures no hardcoded Ollama endpoints or model IDs are present in the configuration.
 
 lm_recognizer:
   supported_entities:
@@ -31,11 +36,11 @@ langextract:
 
   # ollama example
   model:
-    model_id: "qwen2.5:1.5b"
+    model_id: "{{ MODEL_ID | default('qwen2.5:1.5b') }}"
     provider:
       name: "ollama"
       kwargs:
-        model_url: "http://localhost:11434"
+        model_url: "{{ OLLAMA_BASE_URL | default(OLLAMA_HOST | default('http://localhost:11434')) }}"
       extract_params:
         temperature: null
         use_schema_constraints: false

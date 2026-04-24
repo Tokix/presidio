@@ -1,4 +1,9 @@
-"""Tests for LangExtract recognizer hierarchy using mocks."""
+"""
+Tests for LangExtract recognizer hierarchy using mocks.
+
+NOTE: All test configs for model_id and model_url are resolved from environment variables (MODEL_ID, OLLAMA_BASE_URL, OLLAMA_HOST),
+ensuring no hardcoded Ollama endpoints or model IDs are present in the test code or config.
+"""
 import pytest
 import urllib.error
 from unittest.mock import Mock, patch, MagicMock
@@ -7,8 +12,8 @@ from unittest.mock import Mock, patch, MagicMock
 def create_test_config(
     supported_entities=None,
     entity_mappings=None,
-    model_id="qwen2.5:1.5b",
-    model_url="http://localhost:11434",
+    model_id=None,
+    model_url=None,
     temperature=0.0,
     min_score=0.5,
     labels_to_ignore=None,
@@ -22,6 +27,9 @@ def create_test_config(
     if labels_to_ignore is None:
         labels_to_ignore = []
     
+    import os
+    resolved_model_id = model_id or os.environ.get("MODEL_ID", "qwen2.5:1.5b")
+    resolved_model_url = model_url or os.environ.get("OLLAMA_BASE_URL", os.environ.get("OLLAMA_HOST", "http://localhost:11434"))
     return {
         "lm_recognizer": {
             "supported_entities": supported_entities,
@@ -33,11 +41,11 @@ def create_test_config(
             "prompt_file": "presidio-analyzer/presidio_analyzer/conf/langextract_prompts/default_pii_phi_prompt.j2",
             "examples_file": "presidio-analyzer/presidio_analyzer/conf/langextract_prompts/default_pii_phi_examples.yaml",
             "model": {
-                "model_id": model_id,
+                "model_id": resolved_model_id,
                 "provider": {
                     "name": "ollama",
                     "kwargs": {
-                        "model_url": model_url,
+                        "model_url": resolved_model_url,
                     },
                     "extract_params": {
                     },
