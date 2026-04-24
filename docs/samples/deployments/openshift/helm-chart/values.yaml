@@ -65,3 +65,5 @@ e2eTests:
     analyzer: "http://presidio-analyzer.presidio.svc.cluster.local:5002"
     anonymizer: "http://presidio-anonymizer.presidio.svc.cluster.local:5001"
     imageRedactor: "http://presidio-image-redactor.presidio.svc.cluster.local:5003"
+  ollamaBaseUrl: "ollama.flowise.svc.cluster.local:11434"
+  modelId: "qwen2.5:1.5b"

@@ -15,11 +15,34 @@ This Helm chart deploys all core Presidio services (analyzer, anonymizer, image-
    git clone https://github.com/microsoft/presidio.git
    cd presidio/docs/samples/deployments/openshift/helm-chart
    ```
-2. **Update `values.yaml`** with your image registry, namespace, and any custom settings.
+2. **Update `values.yaml`** with your infrastructure-specific settings. See below for details on which values to adapt.
 3. **Deploy the chart:**
    ```sh
    helm upgrade --install presidio ./helm-chart --namespace presidio
    ```
+
+## Configuring values.yaml
+
+The `values.yaml` file controls how Presidio is deployed. You should review and adapt the following keys to match your infrastructure:
+
+- **imageRegistry**: The OpenShift image registry host where your container images are stored.
+- **namespace**: The OpenShift namespace to deploy Presidio into.
+- **analyzer.image.name / anonymizer.image.name / imageRedactor.image.name / e2eTests.image.repository**: The image names and repositories for each component. Change if you use custom images or a different registry.
+- **analyzer.ollamaHost**: Host and port for the Ollama service used by the analyzer. Change if your Ollama service runs elsewhere.
+- **e2eTests.ollamaBaseUrl**: Host and port for the Ollama service used by the e2e tests. Set to the correct service URL for your cluster.
+- **e2eTests.endpoints.analyzer / anonymizer / imageRedactor**: Internal service URLs for each Presidio component. Change if you use custom service names or ports.
+- **replicaCount**: Number of pods to run for each service (default: 1).
+- **resources**: Resource requests/limits for each component. Set according to your cluster's capacity.
+- **nodeSelector, tolerations, affinity**: Advanced scheduling options for OpenShift/Kubernetes clusters.
+
+**Example: Setting the Ollama endpoint for e2e tests**
+
+```yaml
+e2eTests:
+  ollamaBaseUrl: "ollama.flowise.svc.cluster.local:11434"
+```
+
+**Tip:** After changing values.yaml, redeploy the chart with the Helm command above.
 
 ## Running E2E Tests
 

@@ -9,12 +9,14 @@ spec:
       uri: https://github.com/microsoft/presidio.git
     dockerfile: |
         FROM python:3.10-slim
+        ENV SPACY_DATA=/usr/local/lib/python3.10/site-packages
         WORKDIR /repo
         COPY . ./
         WORKDIR /repo/e2e-tests
-        RUN pip install --upgrade pip --root-user-action=ignore
-        RUN pip install --no-cache-dir -r requirements.txt --root-user-action=ignore \
-          && pip install --no-cache-dir -e ../presidio-analyzer[langextract] -e ../presidio-anonymizer --root-user-action=ignore \
+        ENV PIP_ROOT_USER_ACTION=ignore
+        RUN pip install --upgrade pip
+        RUN pip install --no-cache-dir -r requirements.txt \
+          && pip install --no-cache-dir -e ../presidio-analyzer[langextract] -e ../presidio-anonymizer \
           && python -m spacy download en_core_web_lg \
           && python -m spacy validate
         CMD ["pytest"]

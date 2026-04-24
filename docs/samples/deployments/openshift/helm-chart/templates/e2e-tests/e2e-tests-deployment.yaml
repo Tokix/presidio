@@ -5,6 +5,9 @@ metadata:
   labels:
     app: presidio-e2e-tests
 spec:
+  securityContext:
+    supplementalGroups: [ 6972, 1000, 1001 ]
+  # ...existing code...
   replicas: 1
   selector:
     matchLabels:
@@ -28,4 +31,30 @@ spec:
               value: "{{ .Values.e2eTests.endpoints.anonymizer }}"
             - name: IMAGE_REDACTOR_BASE_URL
               value: "{{ .Values.e2eTests.endpoints.imageRedactor }}"
+            - name: OLLAMA_BASE_URL
+              value: "{{ .Values.e2eTests.ollamaBaseUrl }}"
+            - name: MODEL_ID
+              value: "{{ .Values.e2eTests.modelId }}"
+            - name: HOME
+              value: "/tmp"
+            - name: PIP_CACHE_DIR
+              value: "/tmp/.cache/pip"
+            - name: SPACY_DATA
+              value: "/tmp/spacy_data"
+            - name: PYTHONUSERBASE
+              value: "/tmp/.local"
           # No volumeMounts needed; use image's internal /e2e-tests
+          command:
+            - /bin/sh
+            - -c
+            - |
+              python -m pip install --no-cache-dir https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl && \
+              python -m spacy validate && \
+              pytest
+          securityContext:
+            # capabilities:
+            #   drop:
+            #   - ALL
+            # readOnlyRootFilesystem: true
+            runAsNonRoot: true
+
